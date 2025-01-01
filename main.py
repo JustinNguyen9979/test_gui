@@ -1,7 +1,40 @@
 import curses
+import pyfiglet
+
+def display_title(stdscr):
+    """Hiển thị tiêu đề với khung viền và thông tin tác giả."""
+    height, width = stdscr.getmaxyx()
+    title = pyfiglet.figlet_format("E-COMMERCE PACKING")
+    lines = title.splitlines()
+
+    # Tính toán kích thước khung viền
+    max_line_length = max(len(line) for line in lines)
+    box_width = max_line_length + 4
+    box_height = len(lines) + 4
+
+    start_x = (width - box_width) // 2
+    start_y = 1
+
+    # Vẽ khung viền
+    for y in range(start_y, start_y + box_height):
+        for x in range(start_x, start_x + box_width):
+            if y == start_y or y == start_y + box_height - 1:
+                stdscr.addch(y, x, '-' if x > start_x and x < start_x + box_width - 1 else '+')
+            elif x == start_x or x == start_x + box_width - 1:
+                stdscr.addch(y, x, '|')
+
+    # Hiển thị tiêu đề bên trong khung
+    for i, line in enumerate(lines):
+        x = start_x + 2 + (box_width - 4 - len(line)) // 2
+        y = start_y + 2 + i
+        stdscr.addstr(y, x, line, curses.color_pair(1))
+
+    # Hiển thị thông tin tác giả bên dưới khung
+    author_info = "Designed by: Justin Nguyen | WhatsApp: 0982.579.098"
+    stdscr.addstr(start_y + box_height, (width - len(author_info)) // 2, author_info, curses.color_pair(3))
 
 def main_menu(stdscr):
-    # Tắt chế độ hiển thị con trỏ
+    """Hiển thị menu chính và xử lý điều hướng."""
     curses.curs_set(0)
 
     # Danh sách menu
@@ -19,21 +52,19 @@ def main_menu(stdscr):
         stdscr.clear()
 
         # Hiển thị tiêu đề
-        height, width = stdscr.getmaxyx()
-        title = "E-COMMERCE PACKING"
-        stdscr.attron(curses.color_pair(1))
-        stdscr.addstr(1, (width // 2) - (len(title) // 2), title)
-        stdscr.attroff(curses.color_pair(1))
+        display_title(stdscr)
 
         # Vẽ menu
+        height, width = stdscr.getmaxyx()
+        title_height = len(pyfiglet.figlet_format("E-COMMERCE PACKING").splitlines()) + 6
         for idx, item in enumerate(menu):
             x = (width // 2) - (len(item) // 2)
-            y = 3 + idx
+            y = title_height + 2 + idx
             if idx == selected_row:
-                # In đậm và đổi màu chữ dòng được chọn
-                stdscr.attron(curses.color_pair(2) | curses.A_BOLD)
+                # Dòng được chọn in đậm và đổi màu chữ xanh
+                stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
                 stdscr.addstr(y, x, f"> {item} <")
-                stdscr.attroff(curses.color_pair(2) | curses.A_BOLD)
+                stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
             else:
                 # Dòng không được chọn hiển thị bình thường
                 stdscr.addstr(y, x, item)
@@ -62,6 +93,9 @@ def setup_curses(stdscr):
     curses.start_color()
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Tiêu đề
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Dòng được chọn (chữ xanh)
+    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_color(3, 1000, 0, 0)
+    curses.init_pair(3, 3, curses.COLOR_BLACK)
     main_menu(stdscr)
 
 if __name__ == "__main__":
