@@ -30,10 +30,12 @@ def main_menu(stdscr):
             x = (width // 2) - (len(item) // 2)
             y = 3 + idx
             if idx == selected_row:
-                stdscr.attron(curses.color_pair(2))
+                # In đậm và đổi màu chữ dòng được chọn
+                stdscr.attron(curses.color_pair(2) | curses.A_BOLD)
                 stdscr.addstr(y, x, f"> {item} <")
-                stdscr.attroff(curses.color_pair(2))
+                stdscr.attroff(curses.color_pair(2) | curses.A_BOLD)
             else:
+                # Dòng không được chọn hiển thị bình thường
                 stdscr.addstr(y, x, item)
 
         stdscr.refresh()
@@ -48,7 +50,7 @@ def main_menu(stdscr):
         elif key == curses.KEY_ENTER or key in [10, 13]:  # Enter
             if selected_row == len(menu) - 1:  # Thoát
                 break
-            stdscr.addstr(height - 2, 0, f"Bạn đã chọn: {menu[selected_row]}")
+            stdscr.addstr(height - 2, 0, f"Bạn đã chọn: {menu[selected_row]}", curses.A_BOLD)
             stdscr.refresh()
             stdscr.getch()  # Chờ người dùng nhấn phím tiếp tục
 
@@ -59,7 +61,7 @@ def main():
 def setup_curses(stdscr):
     curses.start_color()
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Tiêu đề
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)  # Mục đang chọn
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Dòng được chọn (chữ xanh)
     main_menu(stdscr)
 
 if __name__ == "__main__":
