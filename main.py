@@ -27,11 +27,11 @@ def display_title(stdscr):
     for i, line in enumerate(lines):
         x = start_x + 2 + (box_width - 4 - len(line)) // 2
         y = start_y + 2 + i
-        stdscr.addstr(y, x, line, curses.color_pair(1))
+        stdscr.addstr(y, x, line, curses.color_pair(1))  # Sử dụng màu cặp 1 (xanh lá cây)
 
     # Hiển thị thông tin tác giả bên dưới khung
     author_info = "Designed by: Justin Nguyen | WhatsApp: 0982.579.098"
-    stdscr.addstr(start_y + box_height, (width - len(author_info)) // 2, author_info, curses.color_pair(3))
+    stdscr.addstr(start_y + box_height, (width - len(author_info)) // 2, author_info, curses.color_pair(3))  # Sử dụng màu cặp 2 (đỏ)
 
 def main_menu(stdscr):
     """Hiển thị menu chính và xử lý điều hướng."""
@@ -91,11 +91,9 @@ def main():
 
 def setup_curses(stdscr):
     curses.start_color()
-    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Tiêu đề
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Dòng được chọn (chữ xanh)
-    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_color(3, 1000, 0, 0)
-    curses.init_pair(3, 3, curses.COLOR_BLACK)
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Cặp màu 1: xanh lá cây, đen
+    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)    # Cặp màu 2: đỏ, đen
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)   # Cặp màu 3: xanh dương, đen
     main_menu(stdscr)
 
 if __name__ == "__main__":
